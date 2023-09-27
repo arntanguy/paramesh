@@ -1,4 +1,5 @@
 #include "mesh.hpp"
+#include <fstream>
 
 /*
  * Read in a mesh file and initialize a triangleMesh using it.
@@ -88,6 +89,43 @@ void WriteMesh(const TriangleMesh &tm, const string &fname)
     fclose(meshFile);
 }
 
+void WritePLYMesh(const TriangleMesh &tm, const std::string &filename)
+{
+    std::ofstream file(filename);
+    if (!file) {
+        std::cerr << "Failed to open file: " << filename << std::endl;
+        return;
+    }
+
+file << "ply\n";
+    file << "format ascii 1.0\n";
+    file << "element vertex " << tm.nv << "\n";
+    file << "property float x\n";
+    file << "property float y\n";
+    file << "property float z\n";
+    file << "property float nx\n";
+    file << "property float ny\n";
+    file << "property float nz\n";
+    file << "property float s\n";
+    file << "property float t\n";
+    file << "element face " << tm.nt << "\n";
+    file << "property list uchar int vertex_indices\n";
+    file << "end_header\n";
+
+    for (int i = 0; i < tm.nv; i++) {
+      auto & va = tm.vertexArray[i];
+      file << va.vx << " " << va.vy << " " << va.vz << " "
+           << va.nx << " " << va.ny << " " << va.nz << " "
+           << va.tx << " " << va.ty << "\n";
+    }
+
+    for (int i = 0; i < tm.nt; i++) {
+      auto &ta = tm.triangleArray[i];
+      file << "3 " << ta.i0 << " " << ta.i1 << " " << ta.i2 << "\n";
+    }
+
+    std::cout << "PLY file saved: " << filename << std::endl;
+}
 /*
 * Generate points on a surface by stepping along it in discrete horizontal
 * and vertical steps using two angles, theta and phi. This results in points

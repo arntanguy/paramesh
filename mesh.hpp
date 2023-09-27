@@ -74,6 +74,7 @@ struct TriangleMesh
 
 void ReadMesh(TriangleMesh &tm, const string &fname);
 void WriteMesh(const TriangleMesh &tm, const string &fname);
+void WritePLYMesh(const TriangleMesh &tm, const std::string &filename);
 void GeneratePoints(vector<MeshVertex> &vlist,
                     const int &rings, const int &slices,
                     function<vec3(float, float)> pt_fn,
