@@ -30,6 +30,37 @@ TriangleMesh GenerateParametricSphereMesh(const int &rings, const int &slices)
     return sphere;
 }
 
+TriangleMesh GenerateParametricBeltedEllipsoidMesh(const int &rings, const int &slices, int a, int b, int c)
+{
+  vector<MeshTriangle> tlist; // contains triangles for mesh
+  vector<MeshVertex> vlist;   // contains vertices for mesh
+
+  // parametric eq for a point on a sphere given u = theta, v = phi
+  auto sphere_pt = [a, b, c](float theta, float phi) {
+    auto N = sqrt((a*a * cos(theta)*cos(theta) + b*b * sin(theta)*sin(theta)) * sin(phi)*sin(phi) + c*c * cos(phi)*cos(phi));
+    return vec3(
+      a * sin(phi) * cos(theta) * N,
+      b * sin(phi) * sin(theta) * N,
+      c * cos(phi) * N);
+     
+  };
+
+  GeneratePoints(vlist, rings, slices, sphere_pt, 2.0f*pi/(float)rings, pi/(float)slices);
+  GenerateFaces(tlist, rings, slices);
+  GenerateSphereVertexNormals(vlist);
+
+  TriangleMesh sphere;
+  sphere.nv = vlist.size();
+  sphere.nt = tlist.size();
+  sphere.vertexArray = (MeshVertex*) malloc(vlist.size() * sizeof(MeshVertex));
+  sphere.triangleArray = (MeshTriangle*) malloc(tlist.size() * sizeof(MeshTriangle));
+
+  copy(vlist.begin(), vlist.begin() + vlist.size(), sphere.vertexArray);
+  copy(tlist.begin(), tlist.begin() + tlist.size(), sphere.triangleArray);
+
+  return sphere;
+
+}
 
 TriangleMesh GenerateParametricKleinMesh(const int &rings, const int &slices)
 {
