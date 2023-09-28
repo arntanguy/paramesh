@@ -1,5 +1,8 @@
 /* Some example mesh functions */
-#include "mesh_generators.hpp"
+#include <paramesh/mesh_generators.hpp>
+
+namespace paramesh
+{
 
 TriangleMesh GenerateParametricSphereMesh(const int &rings, const int &slices)
 {
@@ -170,4 +173,6 @@ TriangleMesh GenerateBagelKleinMesh(const int &rings, const int &slices)
     copy(tlist.begin(), tlist.begin() + tlist.size(), klein.triangleArray);
 
     return klein;
+}
+
 }

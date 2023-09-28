@@ -1,5 +1,8 @@
-#include "mesh.hpp"
+#include <paramesh/mesh.hpp>
 #include <fstream>
+
+namespace paramesh
+{
 
 /*
  * Read in a mesh file and initialize a triangleMesh using it.
@@ -349,4 +352,6 @@ void GenerateSphereVertexNormals(vector<MeshVertex> &vlist)
         vlist[i].ny = n.y;
         vlist[i].nz = n.z;
     }
+}
+
 }

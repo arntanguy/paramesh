@@ -1,5 +1,4 @@
-#ifndef MESH_HPP
-#define MESH_HPP
+#pragma once
 
 #include <math.h>
 #include <iostream>
@@ -9,6 +8,8 @@
 #include <functional>
 #include "glm/glm.hpp"
 
+namespace paramesh
+{
 using namespace std;
 using namespace glm;
 const float pi = 3.1415926f;
@@ -88,4 +89,4 @@ void GenerateFaces(vector<MeshTriangle> &tlist, const int &nrings, const int &ns
 void GenerateVertexNormals(vector<MeshVertex> &vlist, const vector<MeshTriangle> &tlist);
 void GenerateSphereVertexNormals(vector<MeshVertex> &vlist);
 
-#endif // MESH_HPP
+}
