@@ -144,7 +144,7 @@ file << "ply\n";
 */
 void GeneratePoints(vector<MeshVertex> &vlist,
                     const int &rings, const int &slices,
-                    function<vec3(float, float)> pt_fn,
+                    std::function<vec3(float, float)> pt_fn,
                     const float pstep, const float tstep)
 {
     float theta = 0.0f;
@@ -172,8 +172,8 @@ void GeneratePoints(vector<MeshVertex> &vlist,
 
 void GeneratePointsAndNormals(vector<MeshVertex> &vlist,
                     const int &rings, const int &slices,
-                    function<vec3(float, float)> pt_fn,
-                    function<vec3(float, float)> normal_fn,
+                    std::function<vec3(float, float)> pt_fn,
+                    std::function<vec3(float, float)> normal_fn,
                     const float pstep, const float tstep)
 {
     float theta = 0.0f;
