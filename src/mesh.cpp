@@ -203,6 +203,47 @@ void GeneratePointsAndNormals(vector<MeshVertex> &vlist,
         theta += tstep;
     }
 }
+
+void GeneratePointsAndNormalsAndColors(vector<MeshVertex> &vlist,
+                    vector<vec4> & colors,
+                    const int &rings, const int &slices,
+                    std::function<vec3(float, float)> pt_fn,
+                    std::function<vec3(float, float)> normal_fn,
+                    std::function<vec4(float, float)> colors_fn,
+                    const float pstep, const float tstep)
+{
+  float theta = 0.0f;
+  float umap = 1.0f/((float)rings * pstep);
+  float vmap = 1.0f/((float)slices * tstep);
+
+  for (int i = 0; i <= slices; i++) {
+      float phi = 0.0f;
+      for (int j = 0; j <= rings; j++) {
+          // std::cout << "theta: " << theta << "phi: " << phi << std::endl;
+          MeshVertex v;
+          vec3 pt = pt_fn(theta, phi); // get pt on surface
+          v.position[0] = pt.x;
+          v.position[1] = pt.y;
+          v.position[2] = pt.z;
+
+          vec3 n = normal_fn(theta, phi); // get pt on surface
+          v.normal[0] = n.x;
+          v.normal[1] = n.y;
+          v.normal[2] = n.z;
+
+          vec4 c = colors_fn(theta, phi);
+          colors.push_back(c);
+
+          // map texture coords to surface
+          v.tex_coord[0] = phi * umap;
+          v.tex_coord[1] = theta * vmap;
+          vlist.push_back(v);
+          phi += pstep;
+      }
+      theta += tstep;
+  }
+}
+
 /*
 * Compute the triangles for the surface
 *
