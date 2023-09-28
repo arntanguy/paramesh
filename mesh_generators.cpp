@@ -45,9 +45,20 @@ TriangleMesh GenerateParametricBeltedEllipsoidMesh(const int &rings, const int &
      
   };
 
-  GeneratePoints(vlist, rings, slices, sphere_pt, 2.0f*pi/(float)rings, pi/(float)slices);
+
+  auto normal_vector = [a,b,c, sphere_pt](double theta, double phi) {
+    // This should be the derivative instead, but using the point is a reasonable approximation for now
+    vec3 pt = sphere_pt(theta, phi);
+    double N_x = pt.x;
+    double N_y = pt.y;
+    double N_z = pt.z;
+
+    return normalize(vec3(N_x, N_y, N_z));
+  };
+
+  GeneratePointsAndNormals(vlist, rings, slices, sphere_pt, normal_vector, 2.0f*pi/(float)rings, pi/(float)slices);
   GenerateFaces(tlist, rings, slices);
-  GenerateSphereVertexNormals(vlist);
+  // GenerateSphereVertexNormals(vlist);
 
   TriangleMesh sphere;
   sphere.nv = vlist.size();

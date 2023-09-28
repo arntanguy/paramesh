@@ -79,6 +79,11 @@ void GeneratePoints(vector<MeshVertex> &vlist,
                     const int &rings, const int &slices,
                     function<vec3(float, float)> pt_fn,
                     const float pstep, const float tstep);
+void GeneratePointsAndNormals(vector<MeshVertex> &vlist,
+                    const int &rings, const int &slices,
+                    function<vec3(float, float)> pt_fn,
+                    function<vec3(float, float)> normal_fn,
+                    const float pstep, const float tstep);
 void GenerateFaces(vector<MeshTriangle> &tlist, const int &nrings, const int &nslices);
 void GenerateVertexNormals(vector<MeshVertex> &vlist, const vector<MeshTriangle> &tlist);
 void GenerateSphereVertexNormals(vector<MeshVertex> &vlist);

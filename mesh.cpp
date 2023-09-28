@@ -167,6 +167,39 @@ void GeneratePoints(vector<MeshVertex> &vlist,
     }
 }
 
+void GeneratePointsAndNormals(vector<MeshVertex> &vlist,
+                    const int &rings, const int &slices,
+                    function<vec3(float, float)> pt_fn,
+                    function<vec3(float, float)> normal_fn,
+                    const float pstep, const float tstep)
+{
+    float theta = 0.0f;
+    float umap = 1.0f/((float)rings * pstep);
+    float vmap = 1.0f/((float)slices * tstep);
+
+    for (int i = 0; i <= slices; i++) {
+        float phi = 0.0f;
+        for (int j = 0; j <= rings; j++) {
+            MeshVertex v;
+            vec3 pt = pt_fn(theta, phi); // get pt on surface
+            v.position[0] = pt.x;
+            v.position[1] = pt.y;
+            v.position[2] = pt.z;
+
+            vec3 n = normal_fn(theta, phi); // get pt on surface
+            v.normal[0] = n.x;
+            v.normal[1] = n.y;
+            v.normal[2] = n.z;
+
+            // map texture coords to surface
+            v.tex_coord[0] = phi * umap;
+            v.tex_coord[1] = theta * vmap;
+            vlist.push_back(v);
+            phi += pstep;
+        }
+        theta += tstep;
+    }
+}
 /*
 * Compute the triangles for the surface
 *
@@ -203,6 +236,12 @@ void GenerateFaces(vector<MeshTriangle> &tlist, const int &nrings, const int &ns
             t1.i0 = pt + curr_ring;
             t1.i1 = pt + next_ring;
             t1.i2 = pt + curr_ring + (nrings+1);
+            MeshTriangle t1b = t1;
+            // Flip triangle orientation if facing away
+            if(curr_ring >= nrings/2)
+            {
+              std::swap(t1.i0, t1.i2);
+            }
             tlist.push_back(t1);
 
             /*
@@ -214,9 +253,14 @@ void GenerateFaces(vector<MeshTriangle> &tlist, const int &nrings, const int &ns
             *    \  |
             *      i2
             */
-            t2.i0 = t1.i1;
+            t2.i0 = t1b.i1;
             t2.i1 = pt + next_ring + (nrings+1);
-            t2.i2 = t1.i2;
+            t2.i2 = t1b.i2;
+            // Flip triangle orientation if facing away
+            if(curr_ring >= nrings/2)
+            {
+              std::swap(t2.i0, t2.i2);
+            }
             tlist.push_back(t2);
         }
     }
